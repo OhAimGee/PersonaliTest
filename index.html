@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="PersonaliTest — Tests de personnalité complets : MBTI, Big Five (OCEAN) et Ennéagramme. 100% local, aucun serveur requis.">
+  <title>PersonaliTest — MBTI · Big Five · Ennéagramme</title>
+  <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+
+  <!-- En-tête flottant visible uniquement à l'impression (répété sur chaque page) -->
+  <div id="print-page-header" class="print-page-header"></div>
+
+  <!-- ═══════════════════════════ HEADER ══════════════════════════ -->
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <!-- Icône cerveau inline SVG -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9.5 2a2.5 2.5 0 0 1 5 0v.5a2.5 2.5 0 0 1-2.5 2.5H9.5A2.5 2.5 0 0 1 7 2.5"/>
+          <path d="M4 5a3 3 0 0 0-1 5.83V13a3 3 0 0 0 5.83 1H14a3 3 0 0 0 1.17.03 3 3 0 0 0 5.83-1v-2.17A3 3 0 0 0 20 5"/>
+          <path d="M9 13v4a3 3 0 0 0 6 0v-4"/>
+          <path d="M12 2v3"/>
+        </svg>
+        PersonaliTest
+      </div>
+      <button id="btn-theme" title="Changer de thème">
+        <!-- mis à jour par ui.js -->
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ══════════════════════ BARRE DE PROGRESSION ══════════════════ -->
+  <div id="progress-container">
+    <div class="progress-track">
+      <div id="progress-bar-wrap">
+        <div id="progress-bar"></div>
+      </div>
+      <div id="progress-label"></div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════ CONTENU PRINCIPAL ═══════════════════ -->
+  <main>
+
+    <!-- ─────────────────── ÉCRAN D'ACCUEIL ──────────────────────── -->
+    <section id="screen-welcome" class="screen">
+
+      <div class="welcome-hero">
+        <div class="welcome-icon">🧠</div>
+        <h1>Découvrez votre personnalité</h1>
+        <p>
+          Trois tests complémentaires — MBTI, Big Five et Ennéagramme —
+          pour une compréhension approfondie de qui vous êtes vraiment.
+        </p>
+
+        <div class="welcome-badges">
+          <span class="welcome-badge">🔒 100 % local</span>
+          <span class="welcome-badge">📴 Aucun serveur</span>
+          <span class="welcome-badge">💾 Sauvegarde auto</span>
+          <span class="welcome-badge">🕐 ~25 min</span>
+        </div>
+
+        <div class="name-input-wrap">
+          <label for="input-candidat">Votre prénom et nom</label>
+          <input type="text" id="input-candidat" placeholder="Ex : Marie Dupont" autocomplete="name" maxlength="80">
+        </div>
+
+        <div class="cta-buttons">
+          <button id="btn-start" class="btn btn-primary btn-lg">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Commencer les tests
+          </button>
+          <button id="btn-resume" class="btn btn-secondary btn-lg" style="display:none;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            Reprendre
+          </button>
+        </div>
+      </div>
+
+      <!-- Présentation des 3 tests -->
+      <div class="tests-overview">
+        <div class="test-card">
+          <div class="test-card-icon">🧩</div>
+          <h3>MBTI</h3>
+          <p>Identifiez votre type parmi les 16 profils de personnalité sur 4 dimensions fondamentales.</p>
+          <div class="test-card-meta">
+            <span>40 questions</span>
+            <span>Format A/B</span>
+            <span>~8 min</span>
+          </div>
+        </div>
+        <div class="test-card">
+          <div class="test-card-icon">📊</div>
+          <h3>Big Five (OCEAN)</h3>
+          <p>Mesurez vos cinq grandes dimensions de personnalité : Ouverture, Conscience, Extraversion, Agréabilité, Neuroticisme.</p>
+          <div class="test-card-meta">
+            <span>50 questions</span>
+            <span>Likert 1-5</span>
+            <span>~10 min</span>
+          </div>
+        </div>
+        <div class="test-card">
+          <div class="test-card-icon">⭕</div>
+          <h3>Ennéagramme</h3>
+          <p>Découvrez votre type parmi les 9 archétypes de motivation profonde et vos dynamiques de croissance.</p>
+          <div class="test-card-meta">
+            <span>45 questions</span>
+            <span>Likert 1-4</span>
+            <span>~8 min</span>
+          </div>
+        </div>
+      </div>
+
+    </section><!-- /screen-welcome -->
+
+
+    <!-- ───────────────────── ÉCRAN MBTI ─────────────────────────── -->
+    <section id="screen-mbti" class="screen">
+
+      <div class="test-header">
+        <h2>🧩 Test MBTI</h2>
+        <p>Choisissez l'option qui vous correspond le mieux. Il n'y a pas de bonne ou mauvaise réponse.</p>
+      </div>
+
+      <div id="mbti-question-container">
+        <!-- Rempli dynamiquement par scripts/tests/mbti.js -->
+      </div>
+
+      <div class="test-navigation">
+        <button id="mbti-prev" class="btn btn-ghost" disabled>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+          Précédent
+        </button>
+        <span id="mbti-counter" class="test-counter">1 / 40</span>
+        <button id="mbti-next" class="btn btn-primary">
+          Suivant
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
+
+      <div style="text-align:center;margin-top:1.5rem;">
+        <button id="btn-mbti-to-bigfive" class="btn btn-secondary">
+          Passer au Big Five →
+        </button>
+      </div>
+
+    </section><!-- /screen-mbti -->
+
+
+    <!-- ─────────────────── ÉCRAN BIG FIVE ───────────────────────── -->
+    <section id="screen-bigfive" class="screen">
+
+      <div class="test-header">
+        <h2>📊 Test Big Five (OCEAN)</h2>
+        <p>Sur une échelle de 1 à 5, indiquez dans quelle mesure chaque affirmation vous correspond.</p>
+      </div>
+
+      <div id="bigfive-question-container">
+        <!-- Rempli dynamiquement par scripts/tests/bigfive.js -->
+      </div>
+
+      <div class="test-navigation">
+        <button id="bigfive-prev" class="btn btn-ghost" disabled>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+          Précédent
+        </button>
+        <span id="bigfive-counter" class="test-counter">1 / 50</span>
+        <button id="bigfive-next" class="btn btn-primary">
+          Suivant
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
+
+      <div style="text-align:center;margin-top:1.5rem;">
+        <button id="btn-bigfive-to-ennea" class="btn btn-secondary">
+          Passer à l'Ennéagramme →
+        </button>
+      </div>
+
+    </section><!-- /screen-bigfive -->
+
+
+    <!-- ─────────────────── ÉCRAN ENNÉAGRAMME ────────────────────── -->
+    <section id="screen-enneagramme" class="screen">
+
+      <div class="test-header">
+        <h2>⭕ Test Ennéagramme</h2>
+        <p>Sur une échelle de 1 à 4, indiquez dans quelle mesure chaque affirmation vous correspond.</p>
+      </div>
+
+      <div id="enneagramme-question-container">
+        <!-- Rempli dynamiquement par scripts/tests/enneagramme.js -->
+      </div>
+
+      <div class="test-navigation">
+        <button id="enneagramme-prev" class="btn btn-ghost" disabled>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+          Précédent
+        </button>
+        <span id="enneagramme-counter" class="test-counter">1 / 45</span>
+        <button id="enneagramme-next" class="btn btn-primary">
+          Suivant
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
+
+      <div style="text-align:center;margin-top:1.5rem;">
+        <button id="btn-ennea-to-results" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m22 4-10 10-3-3"/></svg>
+          Voir mes résultats
+        </button>
+      </div>
+
+    </section><!-- /screen-enneagramme -->
+
+
+    <!-- ─────────────────────── RÉSULTATS ────────────────────────── -->
+    <section id="screen-results" class="screen">
+
+      <div class="results-hero">
+        <h2>🎉 Votre profil de personnalité</h2>
+        <p>Résultats complets basés sur vos réponses aux trois tests.</p>
+      </div>
+
+      <div id="results-candidat"></div>
+
+      <!-- Cartes résumé -->
+      <div id="results-summary">
+        <!-- Rempli par ui.js → renderSummaryCards() -->
+      </div>
+
+      <!-- Accordéon des sections détaillées -->
+      <div class="accordion">
+
+        <!-- MBTI -->
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span class="accordion-icon">🧩</span>
+            <span class="accordion-title">Profil MBTI</span>
+            <svg class="accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-body-inner" id="mbti-result-content">
+              <!-- Rempli par ui.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Big Five -->
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span class="accordion-icon">📊</span>
+            <span class="accordion-title">Big Five (OCEAN)</span>
+            <svg class="accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-body-inner" id="bigfive-result-content">
+              <!-- Rempli par ui.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Ennéagramme -->
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span class="accordion-icon">⭕</span>
+            <span class="accordion-title">Ennéagramme</span>
+            <svg class="accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-body-inner" id="ennea-result-content">
+              <!-- Rempli par ui.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Synthèse croisée -->
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span class="accordion-icon">🔮</span>
+            <span class="accordion-title">Synthèse croisée</span>
+            <svg class="accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-body-inner" id="synthese-content">
+              <!-- Rempli par ui.js -->
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /accordion -->
+
+      <!-- Boutons d'action -->
+      <div class="results-actions">
+        <button id="btn-pdf" class="btn btn-secondary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Exporter en PDF
+        </button>
+        <button id="btn-reset" class="btn btn-danger">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          Recommencer
+        </button>
+      </div>
+
+    </section><!-- /screen-results -->
+
+  </main>
+
+  <!-- ══════════════════════════ FOOTER ══════════════════════════ -->
+  <footer class="app-footer">
+    <span>PersonaliTest &mdash; usage strictement privé et non commercial</span>
+
+    <div class="footer-links">
+      <!-- Remplacez les # par vos URLs réelles -->
+      <a href="https://github.com/OhAimGee" target="_blank" rel="noopener noreferrer" class="footer-social-link" title="GitHub">
+        <!-- Icône GitHub -->
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.184 6.839 9.504.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.605-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.031 1.531 1.031.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.026 2.747-1.026.546 1.378.203 2.397.1 2.65.64.7 1.028 1.595 1.028 2.688 0 3.848-2.338 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.579.688.481C19.138 20.2 22 16.447 22 12.021 22 6.484 17.523 2 12 2z"/>
+        </svg>
+        GitHub
+      </a>
+      <a href="https://www.linkedin.com/in/raphaël-legros-833454111/" target="_blank" rel="noopener noreferrer" class="footer-social-link" title="LinkedIn">
+        <!-- Icône LinkedIn -->
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+        </svg>
+        LinkedIn
+      </a>
+
+      <button id="btn-legal" class="footer-link">Mentions légales &amp; Sources</button>
+    </div>
+  </footer>
+
+  <!-- ══════════════════ MODALE MENTIONS LÉGALES ══════════════════ -->
+  <div id="modal-legal" class="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-legal-title">
+    <div class="modal-box">
+      <button id="btn-legal-close" class="modal-close" aria-label="Fermer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+
+      <h2 id="modal-legal-title">Mentions légales &amp; Sources</h2>
+
+      <!-- ── 1. Mentions légales ── -->
+      <section class="legal-section">
+        <h3>1. Mentions légales</h3>
+        <p>
+          <strong>PersonaliTest</strong> est une application web statique fonctionnant intégralement
+          en local dans le navigateur de l’utilisateur. Elle ne possède pas de
+          serveur, n’enregistre aucune donnée sur un tiers et ne transmet aucune
+          information personnelle via le réseau.
+        </p>
+        <p>
+          Les données saisies (prénom / nom du candidat, réponses aux questionnaires)
+          sont stockées <em>exclusivement</em> dans le <code>localStorage</code> du
+          navigateur local et restent sous l’entière responsabilité de l’utilisateur.
+          Aucune collecte de données à caractère personnel (RGPD) n’est effectuée.
+        </p>
+        <p>
+          Cette application est fournie <strong>gratuitement</strong>, à titre informatif
+          et dans un cadre strictement <strong>privé et non commercial</strong>.
+          Toute redistribution commerciale est interdite sans accord explicite de l’auteur.
+        </p>
+      </section>
+
+      <!-- ── 2. Disclaimer ── -->
+      <section class="legal-section">
+        <h3>2. Avertissement sur les résultats</h3>
+        <div class="legal-disclaimer">
+          <p>
+            ⚠️ Les résultats fournis par PersonaliTest sont <strong>indicatifs</strong> et
+            ont une visée <strong>pédagogique et de développement personnel</strong>
+            uniquement. Ils ne constituent en aucun cas :
+          </p>
+          <ul>
+            <li>un diagnostic médical ou psychiatrique ;</li>
+            <li>un bilan psychologique réalisé par un professionnel habilité ;</li>
+            <li>une évaluation certifiée à des fins de recrutement ou de sélection ;</li>
+            <li>une vérité absolue ou définitive sur la personnalité de l’utilisateur.</li>
+          </ul>
+          <p>
+            Le MBTI, le modèle Big Five et l’Ennéagramme sont des outils
+            psychométriques dont la robustesse scientifique est variable et débattue
+            dans la littérature académique. Le Big Five (modèle des cinq facteurs)
+            est le plus validé empiriquement ; le MBTI et l’Ennéagramme bénéficient
+            d’une forte diffusion mais font l’objet de réserves quant à leur
+            fidélité test-retest et leur validité prédictive.
+          </p>
+          <p>
+            Pour une évaluation professionnelle, veuillez consulter un psychologue
+            ou un coach certifié en bilan de compétences.
+          </p>
+        </div>
+      </section>
+
+      <!-- ── 3. Sources ── -->
+      <section class="legal-section">
+        <h3>3. Sources &amp; Références</h3>
+
+        <h4>MBTI &mdash; Myers-Briggs Type Indicator</h4>
+        <ul class="legal-sources">
+          <li>Myers, I. B., &amp; McCaulley, M. H. (1985). <em>Manual: A guide to the development and use of the Myers-Briggs Type Indicator.</em> Consulting Psychologists Press.</li>
+          <li>Myers, I. B., McCaulley, M. H., Quenk, N. L., &amp; Hammer, A. L. (1998). <em>MBTI Manual: A Guide to the Development and Use of the Myers-Briggs Type Indicator</em> (3rd ed.). CPP, Inc.</li>
+          <li>Jung, C. G. (1921). <em>Psychologische Typen.</em> Rascher Verlag. (trad. fr. : <em>Types psychologiques</em>, Georg, 1950.)</li>
+          <li>Pittenger, D. J. (1993). Measuring the MBTI… and coming up short. <em>Journal of Career Planning and Employment</em>, 54(1), 48–52.</li>
+        </ul>
+
+        <h4>Big Five &mdash; Modèle des cinq facteurs (OCEAN)</h4>
+        <ul class="legal-sources">
+          <li>Costa, P. T., &amp; McCrae, R. R. (1992). <em>Revised NEO Personality Inventory (NEO-PI-R) and NEO Five-Factor Inventory (NEO-FFI) professional manual.</em> Psychological Assessment Resources.</li>
+          <li>Goldberg, L. R. (1990). An alternative &ldquo;description of personality&rdquo;: The Big-Five factor structure. <em>Journal of Personality and Social Psychology</em>, 59(6), 1216–1229.</li>
+          <li>John, O. P., Naumann, L. P., &amp; Soto, C. J. (2008). Paradigm shift to the integrative Big Five trait taxonomy. In O. P. John, R. W. Robins, &amp; L. A. Pervin (Eds.), <em>Handbook of personality: Theory and research</em> (3rd ed., pp. 114–158). Guilford Press.</li>
+          <li>McCrae, R. R., &amp; John, O. P. (1992). An introduction to the five-factor model and its applications. <em>Journal of Personality</em>, 60(2), 175–215.</li>
+        </ul>
+
+        <h4>Ennéagramme</h4>
+        <ul class="legal-sources">
+          <li>Riso, D. R., &amp; Hudson, R. (1996). <em>Personality Types: Using the Enneagram for Self-Discovery</em> (revised ed.). Houghton Mifflin.</li>
+          <li>Riso, D. R., &amp; Hudson, R. (1999). <em>The Wisdom of the Enneagram: The Complete Guide to Psychological and Spiritual Growth for the Nine Personality Types.</em> Bantam Books.</li>
+          <li>Naranjo, C. (1994). <em>Character and Neurosis: An Integrative View.</em> Gateways/IDHHB.</li>
+          <li>Sutton, A., et al. (2013). A longitudinal mixed method study of self-awareness, self-concept and Enneagram type. <em>Enneagram Journal</em>, 6(1).</li>
+        </ul>
+
+        <h4>Synthèse croisée &mdash; Correspondances inter-typologies</h4>
+        <ul class="legal-sources">
+          <li>Furnham, A., &amp; Crump, J. (2005). Personality traits, types, and disorders: An examination of the relationship between three self-report measures. <em>European Journal of Personality</em>, 19(3), 167–184.</li>
+          <li>Quenk, N. L. (2009). <em>Essentials of Myers-Briggs Type Indicator Assessment</em> (2nd ed.). Wiley.</li>
+        </ul>
+
+        <h4>Développement &mdash; Technologies utilisées</h4>
+        <ul class="legal-sources">
+          <li>HTML5, CSS3, JavaScript ES5 &mdash; standards W3C / ECMA International.</li>
+          <li>API Canvas &mdash; <em>HTML Living Standard</em>, WHATWG (<a href="https://html.spec.whatwg.org/multipage/canvas.html" target="_blank" rel="noopener">html.spec.whatwg.org</a>).</li>
+          <li>Persistance locale : <code>Window.localStorage</code> &mdash; Web Storage API, W3C.</li>
+          <li>Export PDF : <code>window.print()</code> + styles <code>@media print</code> / <code>@page</code> CSS.</li>
+        </ul>
+      </section>
+
+      <div class="modal-footer">
+        <button id="btn-legal-close2" class="btn btn-primary">Fermer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════ SCRIPTS ════════════════════════════ -->
+  <!-- 1. Données (définissent les variables globales) -->
+  <script src="assets/data/questions_mbti.js"></script>
+  <script src="assets/data/questions_bigfive.js"></script>
+  <script src="assets/data/questions_enneagramme.js"></script>
+
+  <!-- 2. Scoring -->
+  <script src="scripts/scoring/mbtiScoring.js"></script>
+  <script src="scripts/scoring/bigfiveScoring.js"></script>
+  <script src="scripts/scoring/enneagrammeScoring.js"></script>
+
+  <!-- 3. Interprétation -->
+  <script src="scripts/interpretation/mbtiInterpretation.js"></script>
+  <script src="scripts/interpretation/bigfiveInterpretation.js"></script>
+  <script src="scripts/interpretation/enneagrammeInterpretation.js"></script>
+  <script src="scripts/interpretation/synthese.js"></script>
+
+  <!-- 4. Graphiques -->
+  <script src="scripts/charts/radar.js"></script>
+  <script src="scripts/charts/bars.js"></script>
+  <script src="scripts/charts/pie.js"></script>
+
+  <!-- 5. Modules de test -->
+  <script src="scripts/tests/mbti.js"></script>
+  <script src="scripts/tests/bigfive.js"></script>
+  <script src="scripts/tests/enneagramme.js"></script>
+
+  <!-- 6. UI + contrôleur principal -->
+  <script src="scripts/ui.js"></script>
+  <script src="scripts/main.js"></script>
+
+</body>
+</html>
